@@ -1,0 +1,65 @@
+---
+title: "Top 10 US Touristic Attractions with Leaflet"
+author: "Alfredo Rojas"
+date: "6/9/2020"
+output: html_document
+---
+
+
+
+```{r, include=F}
+require(leaflet)
+require(dplyr)
+```
+
+```{r}
+df <- data.frame(
+  lat = c(40.689235,
+          36.092742,
+          28.385355,
+          37.297433,
+          47.620496,
+          34.134119,
+          36.114740,
+          40.757950,
+          44.427722,
+          25.395300
+          ),
+  lng = c(-74.044519,
+          -112.112109,
+          -81.563890,
+          -113.023331,
+          -122.349291,
+          -118.321569,
+          -115.172817,
+          -73.985553,
+          -110.588368,
+          -80.583083
+          ),
+  popup = c("Statue Of Liberty",
+            "Grand Canyon National Park",
+            "Walt Disney World Resort",
+            "Zion National Park",
+            "Space Needle",
+            "Hollywood Sign",
+            "Las Vegas Strip",
+            "Times Square",
+            "Yellowstone National Park",
+            "Everglades National Park"
+            )
+  
+  
+)
+```
+
+```{r}
+df %>%
+  leaflet() %>%
+  addTiles() %>%
+  addMarkers(lat = ~lat,
+             lng = ~lng,
+             popup = ~popup)
+```
+
+
+
