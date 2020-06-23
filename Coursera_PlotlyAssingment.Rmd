@@ -1,0 +1,177 @@
+---
+title: "Video Game Sales by Publisher over Years"
+author: "Alfredo Rojas"
+date: "6/23/2020"
+output: html_document
+---
+
+```{r setup, include=F}
+require(plotly)
+require(dplyr)
+```
+
+
+```{r vgsales, warning=F, message= F, echo = F, include = F}
+dataset <- read.csv('vgsales.csv')
+dataset <- dataset %>% 
+  select(Year,Publisher,Global_Sales) %>%
+  group_by(Year,Publisher) %>%
+  summarise(Global_Sales = sum(Global_Sales*1000000))
+
+main_pub <- dataset %>% group_by(Publisher) %>% summarise(Global_Sales = sum(Global_Sales))
+main_pub <- main_pub[order(main_pub$Global_Sales,decreasing = T),] %>% select(Publisher)
+main_pub <- head(main_pub,10)
+
+dataset <- inner_join(dataset,main_pub,by = "Publisher")
+
+# Nintendo				
+# Electronic Arts				
+# Activision				
+# Sony Computer Entertainment				
+# Ubisoft				
+# Take-Two Interactive				
+# THQ				
+# Konami Digital Entertainment				
+# Sega				
+# Namco Bandai Games
+
+nintendo <- dataset %>% filter(Publisher == "Nintendo")
+ea <- dataset %>% filter(Publisher == "Electronic Arts")
+activision <- dataset %>% filter(Publisher == "Activision")
+sony <- dataset %>% filter(Publisher == "Sony Computer Entertainment")
+ubisoft <- dataset %>% filter(Publisher == "Ubisoft")
+taketwo <- dataset %>% filter(Publisher == "Take-Two Interactive")
+thq <- dataset %>% filter(Publisher == "THQ")
+konami <- dataset %>% filter(Publisher == "Konami Digital Entertainment")
+sega <- dataset %>% filter(Publisher == "Sega")
+namco <- dataset %>% filter(Publisher == "Namco Bandai Games")
+
+```
+
+
+```{r plot, warning=F, message= F, echo = F}
+
+time_graph <- 
+  plot_ly() %>%
+  add_trace(
+    x = nintendo$Year,
+    y = nintendo$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = nintendo$Publisher,
+    line = list(color = "#E60012"),
+    marker = list(color = "#E60012"),
+    hovertemplate = with(nintendo, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = ea$Year,
+    y = ea$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = ea$Publisher,
+    line = list(color = "#FF4747"),
+    marker = list(color = "#FF4747"),
+    hovertemplate = with(ea, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = activision$Year,
+    y = activision$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = activision$Publisher,
+    line = list(color = "#000000"),
+    marker = list(color = "#000000"),
+    hovertemplate = with(activision, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = sony$Year,
+    y = sony$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = sony$Publisher,
+    line = list(color = "#FAAF04"),
+    marker = list(color = "#FAAF04"),
+    hovertemplate = with(sony, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = ubisoft$Year,
+    y = ubisoft$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = ubisoft$Publisher,
+    line = list(color = "#444B8B"),
+    marker = list(color = "#444B8B"),
+    hovertemplate = with(ubisoft, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = taketwo$Year,
+    y = taketwo$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = taketwo$Publisher,
+    line = list(color = "#1476C6"),
+    marker = list(color = "#1476C6"),
+    hovertemplate = with(taketwo, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = thq$Year,
+    y = thq$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = thq$Publisher,
+    line = list(color = "#696A6C"),
+    marker = list(color = "#696A6C"),
+    hovertemplate = with(thq, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = konami$Year,
+    y = konami$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = konami$Publisher,
+    line = list(color = "#E51E2B"),
+    marker = list(color = "#E51E2B"),
+    hovertemplate = with(konami, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = sega$Year,
+    y = sega$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = sega$Publisher,
+    line = list(color = "#0060A8"),
+    marker = list(color = "#0060A8"),
+    hovertemplate = with(sega, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+  add_trace(
+    x = namco$Year,
+    y = namco$Global_Sales,
+    type = "scatter",
+    mode = "lines+markers",
+    name = namco$Publisher,
+    line = list(color = "#F36F20"),
+    marker = list(color = "#F36F20"),
+    hovertemplate = with(namco, paste("<b>", Publisher, Year, "</b><br>", "Sales:", scales::comma(Global_Sales), "<extra></extra>"))
+  ) %>%
+      layout(
+        autosize = T,
+        title = F,
+        legend = list(
+          orientation = "h",
+          y = -0.3
+        ),
+        xaxis = list(
+          showgrid = F,
+          automargin = TRUE,
+          tickangle = 90
+        ),
+        yaxis = list(
+          title = "",
+          showgrid = F
+        )
+      )
+time_graph
+  
+```
+
+
